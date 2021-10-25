@@ -1,15 +1,16 @@
 
 import React, { Component,useState } from 'react';
 import { gql, useQuery } from '@apollo/client';
-import Pokedex from './pokedex';
+
+
 
 
 
 
 
 const GET_POKEMON_INFO = gql`
-query que($name: String!){
-	getPokemon(pokemon: $name reverseFlavorTexts: true takeFlavorTexts: 1) {
+query($number: Int!) {
+	getPokemonByDexNumber(number: $number reverseFlavorTexts: true takeFlavorTexts: 1) {
 		num
 		species
 		types
@@ -36,22 +37,13 @@ query que($name: String!){
 }`;
 
 
-function PokedexItem ({species}){
-    const { loading, error, data } = useQuery(GET_POKEMON_INFO, {
-        variables: { species },
-      });
-
-
+function PokedexItem (props){
+    const { loading, error, data } = useQuery(GET_POKEMON_INFO,{variables: { number:props.id }}
+      );
     if (loading) return null;
     if (error) return `Error! ${error}`;  
-    
-    return(data.getPokemon.species)
+    return(<img  alt = "" src = {data.getPokemonByDexNumber.sprite} />)
 }
 
 
-
-function results(){
-    const results = Pokedex().map(pokemon=>(<div>{PokedexItem(pokemon)}</div>))
-
-}
 export default PokedexItem
